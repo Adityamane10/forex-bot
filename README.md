@@ -24,8 +24,7 @@ signal → paper trade.
 | Storage | MongoDB (driver + in-memory fallback) · Redis (client + in-memory fallback) |
 | Infra | Docker Compose · Git |
 
-External data providers are **optional** and swappable (see `MARKET_DATA.md`,
-`NEWS.md`, `ECONOMIC_EVENTS.md`, `DATA_LICENSES.md`). Without any API key the
+External data providers are **optional** and swappable. Without any API key the
 platform runs in **DEMO mode** with a clearly-labeled simulated feed. With no
 keys it also runs on **real data**: Yahoo (forex, unofficial) and Binance
 public API (crypto, real bid/ask).
@@ -50,15 +49,6 @@ Open http://localhost:5173, register an account, and explore: Dashboard →
 Market (live chart) → Signals → Backtesting → Models (train the ML
 challenger) → Risk → System.
 
-### One double-click — ForexBot.exe
-
-No terminal at all: double-click **`scripts\launcher\ForexBot.exe`** (create a
-desktop shortcut with `scripts\launcher\create-shortcut.ps1`). It starts the
-whole stack — shared, backend, frontend, AI engine, the MetaTrader 5 terminal
-with the tick bridge and order worker — opens the dashboard automatically, and
-its tray icon stops everything cleanly on Exit. Details and troubleshooting:
-[`scripts/launcher/README.md`](scripts/launcher/README.md).
-
 ### One command, MT5 included
 
 ```bash
@@ -82,7 +72,7 @@ instead of failing into a watchdog cooldown.
 | `MT5_STARTUP_WAIT_S` | how long the bridge/trader wait for the terminal (default 180) |
 | `MT5_BRIDGE=0` / `MT5_TRADER=0` | skip a worker |
 
-Full instructions in [`SETUP.md`](SETUP.md) (including `docker compose up`).
+Configuration lives in `.env` (see `.env.example`); Docker is optional via `docker compose up`.
 
 ## Repository layout
 
@@ -93,39 +83,9 @@ Full instructions in [`SETUP.md`](SETUP.md) (including `docker compose up`).
 /ai-engine    Python FastAPI: features, ML, calibration, walk-forward
 /shared       Type contract + constants + asset engine (npm workspace)
 /docker       Dockerfiles for the compose stack
-/docs         full documentation (24 documents)
-/scripts      setup helper
+/docs         Concord MCP integration documentation
+/scripts      setup and operational helpers
 ```
-
-## Documentation index
-
-| Topic | Doc |
-|---|---|
-| Setup & Docker | [`SETUP.md`](SETUP.md) · [`DEPLOYMENT.md`](DEPLOYMENT.md) |
-| Architecture | [`ARCHITECTURE.md`](ARCHITECTURE.md) |
-| REST API | [`API.md`](API.md) |
-| WebSocket events | [`WEBSOCKET.md`](WEBSOCKET.md) |
-| Database | [`DATABASE.md`](DATABASE.md) |
-| Market data & providers | [`MARKET_DATA.md`](MARKET_DATA.md) |
-| Indicators | [`INDICATORS.md`](INDICATORS.md) |
-| Features | [`FEATURES.md`](FEATURES.md) |
-| ML & calibration | [`ML.md`](ML.md) · [`ML_PIPELINE.md`](ML_PIPELINE.md) |
-| News & sentiment | [`NEWS.md`](NEWS.md) |
-| Economic calendar | [`ECONOMIC_EVENTS.md`](ECONOMIC_EVENTS.md) |
-| Trading engine | [`TRADING_ENGINE.md`](TRADING_ENGINE.md) |
-| Signal engine | [`SIGNAL_ENGINE.md`](SIGNAL_ENGINE.md) |
-| Risk engine | [`RISK.md`](RISK.md) · [`RISK_ENGINE.md`](RISK_ENGINE.md) |
-| Portfolio & correlation | [`PORTFOLIO.md`](PORTFOLIO.md) |
-| Paper trading | [`PAPER_TRADING.md`](PAPER_TRADING.md) |
-| Broker & account binding (XM / MT5) | [`BROKER.md`](BROKER.md) |
-| Backtesting & research | [`BACKTESTING.md`](BACKTESTING.md) · [`RESEARCH.md`](RESEARCH.md) |
-| Walk-forward | [`WALK_FORWARD.md`](WALK_FORWARD.md) |
-| MLOps & champion/challenger | [`MLOPS.md`](MLOPS.md) · [`MODEL_VERSIONING.md`](MODEL_VERSIONING.md) |
-| Security | [`SECURITY.md`](SECURITY.md) |
-| Testing | [`TESTING.md`](TESTING.md) |
-| Troubleshooting | [`TROUBLESHOOTING.md`](TROUBLESHOOTING.md) |
-| Free services & licenses | [`FREE_SERVICES.md`](FREE_SERVICES.md) · [`THIRD_PARTY_LICENSES.md`](THIRD_PARTY_LICENSES.md) |
-| Project audit | [`PROJECT_AUDIT.md`](PROJECT_AUDIT.md) |
 
 ## Non-negotiable rules implemented
 
@@ -149,18 +109,16 @@ Full instructions in [`SETUP.md`](SETUP.md) (including `docker compose up`).
    confirmed. Real money needs two independent opt-ins (`ALLOW_REAL_TRADING`,
    `MT5_ALLOW_REAL`); with either off, a real account can be bound and monitored
    but not traded. Every position and trade records the terms it was executed
-   under. See [`BROKER.md`](BROKER.md) — and `npm run verify:broker` to check the
-   whole chain against a running backend.
+   under. Use `npm run verify:broker` to check the whole chain against a running
+   backend.
 
 ## Verification status
 
-See [`TESTING.md`](TESTING.md) and the final report in `docs/FINAL_TEST_REPORT.md`
-for what was actually run and what passed. Backend: unit + integration suites via
-`npm run test:backend` (a handful of the live-pipeline tests need a real market
-feed and a live USD/INR rate, and are the only ones that fail without one).
-AI engine: 12 tests (feature correctness, no-lookahead, walk-forward,
-calibration, promotion). Frontend: build + typecheck verified; unit tests for
-formatting. Live end-to-end workflows verified against running services.
+Backend unit and integration suites run via `npm run test:backend`; live-pipeline
+tests require a real market feed and a live USD/INR rate. Frontend build and
+typecheck are verified. Live end-to-end workflows were exercised against running
+services. Dependencies, model artifacts, and local state are intentionally not
+committed.
 
 ## Agent coordination with Concord MCP
 

@@ -10,7 +10,7 @@
  *
  * Symbol mapping: internal "BTC/USDT" <-> exchange "BTCUSDT".
  *
- * Free-tier reality (documented in RESOURCE_AUDIT.md): public Binance market
+ * Free-tier reality: public Binance market
  * data is free and unauthenticated; rate limits apply (bookTicker weight 2,
  * klines weight 2, 6000 weight/min IP limit). This provider stays far below.
  */

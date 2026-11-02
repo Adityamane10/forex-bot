@@ -14,8 +14,8 @@
  *       npm run verify:broker
  *
  * It talks to a backend YOU started, and expects that backend to be FRESH (no
- * MT5 account bound yet). See BROKER.md §6c for the one-liner; the throwaway
- * instance there uses an in-memory store, so no development data is touched.
+ * MT5 account bound yet). The throwaway instance uses an in-memory store, so no
+ * development data is touched.
  */
 const BASE = process.argv[2] ?? 'http://127.0.0.1:4399';
 const INTERNAL_TOKEN = process.argv[3] ?? 'dev-internal-token';
