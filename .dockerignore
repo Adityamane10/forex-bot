@@ -1,0 +1,14 @@
+node_modules
+**/node_modules
+venv
+ai-engine/venv
+**/dist
+.pytest_cache
+__pycache__
+**/__pycache__
+.data
+*.log
+.env
+.env.*
+backend/.env
+.git

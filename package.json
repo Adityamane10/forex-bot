@@ -1,0 +1,32 @@
+{
+  "name": "fx-intel",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Real-Time AI/ML Forex Market Intelligence, Prediction, Signal Generation, Backtesting and Paper Trading Platform",
+  "workspaces": [
+    "shared",
+    "backend",
+    "frontend"
+  ],
+  "scripts": {
+    "build:shared": "npm run build --workspace shared",
+    "dev:shared": "npm run dev --workspace shared",
+    "dev:backend": "npm run dev --workspace backend",
+    "dev:frontend": "npm run dev --workspace frontend",
+    "dev:ai": "cd ai-engine && venv\\Scripts\\python.exe -m uvicorn app.main:app --reload --port 8500",
+    "test:backend": "npm run test --workspace backend",
+    "test:frontend": "npm run test --workspace frontend",
+    "test:ai": "cd ai-engine && venv\\Scripts\\python.exe -m pytest tests -q",
+    "test": "npm run test:backend && npm run test:frontend && npm run test:ai",
+    "verify:broker": "node scripts/verify-broker-binding.mjs",
+    "typecheck": "npm run typecheck --workspace backend && npm run typecheck --workspace frontend",
+    "lint:backend": "npm run lint --workspace backend",
+    "lint:frontend": "npm run lint --workspace frontend",
+    "build": "npm run build:shared && npm run build --workspace backend && npm run build --workspace frontend",
+    "setup": "node scripts/setup.mjs",
+    "dev:all": "node scripts/start-all.mjs"
+  },
+  "engines": {
+    "node": ">=20"
+  }
+}

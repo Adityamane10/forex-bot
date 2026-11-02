@@ -1,0 +1,52 @@
+node_modules/
+dist/
+*.log
+*.pid
+.env
+.env.*
+!.env.example
+coverage/
+.DS_Store
+credentials*
+*.pem
+*.key
+*.exe
+*.dll
+*.pdb
+*.zip
+*.7z
+*.rar
+
+# AI engine artifacts and local runtimes
+ai-engine/models*/
+ai-engine/datasets*/
+ai-engine/venv*/
+ai-engine/.venv/
+ai-engine/__pycache__/
+__pycache__/
+*.pyc
+.pytest_cache/
+*.h5
+*.joblib
+*.pkl
+*.pt
+
+# Local DB files
+*.db
+*.db-shm
+*.db-wal
+.data/
+.freebuff/
+.hf-cache/
+.pip-cache/
+.pip-tmp/
+tmp/
+
+# Agent coordination state
+.concord/
+opencode.json
+opencode.local.json
+
+# IDE
+.vscode/
+.idea/

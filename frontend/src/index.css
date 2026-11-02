@@ -1,0 +1,235 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/*
+ * FX Intel — "Instrument"
+ *
+ * A precision-equipment reading of a trading terminal: warm ink ground,
+ * achromatic chrome, and saturated colour reserved strictly for money and
+ * direction. Numbers are the content, so they get the careful treatment —
+ * tabular figures, slashed zero, tight tracking.
+ */
+
+:root {
+  color-scheme: dark;
+
+  /* Reserved for the chart components, which need real hex values rather than
+     Tailwind classes. Kept here so the palette has exactly one home. */
+  --ink: #0a0a09;
+  --panel: #111110;
+  --panel-2: #171716;
+  --hairline: #262521;
+  --hairline-strong: #33322c;
+  --ash-400: #96938a;
+  --ash-500: #807d75;
+  --bone: #d5d1c4;
+  --gain: #34d6a0;
+  --loss: #ff6b5e;
+  --caution: #f7b23f;
+}
+
+@layer base {
+  body {
+    @apply bg-bg text-slate-200 antialiased;
+    font-family: 'Instrument Sans', ui-sans-serif, system-ui, -apple-system, 'Segoe UI', sans-serif;
+    /* Digits must never change width — a live price that reflows on every tick
+       is genuinely harder to read. */
+    font-variant-numeric: tabular-nums;
+    font-feature-settings: 'tnum' 1;
+  }
+
+  /* Numerals: tabular, slashed zero, very slightly tightened. */
+  .font-mono,
+  code,
+  kbd,
+  pre {
+    font-feature-settings: 'tnum' 1, 'zero' 1;
+    letter-spacing: -0.01em;
+  }
+
+  h1 {
+    letter-spacing: -0.015em;
+  }
+
+  td,
+  th {
+    @apply px-2.5 py-2 text-sm;
+  }
+
+  /* One visible, consistent focus treatment across the whole app. */
+  :focus-visible {
+    outline: 2px solid rgba(213, 209, 196, 0.75);
+    outline-offset: 2px;
+    border-radius: 3px;
+  }
+
+  ::selection {
+    background: rgba(213, 209, 196, 0.22);
+    color: #f1efe9;
+  }
+
+  /* Native controls should match the ink ground rather than flash white. */
+  select option {
+    background-color: #171716;
+    color: #dddad1;
+  }
+
+  input::placeholder {
+    color: #6b6862;
+  }
+}
+
+@layer components {
+  /* Micro label: the small tracked-out uppercase caption used for card
+     eyebrows, table headers and stat labels. */
+  .eyebrow {
+    @apply text-[10px] font-medium uppercase text-slate-500;
+    letter-spacing: 0.09em;
+  }
+
+  /* Hairline that reads as a machined seam rather than a border: brightest in
+     the middle, fading at both ends. */
+  .seam {
+    height: 1px;
+    background: linear-gradient(to right, transparent, #33322c 12%, #33322c 88%, transparent);
+  }
+
+  /* Live indicator: a steady core with one slow expanding ring. Used for
+     "feed connected", "market open", an active engine — states that are
+     continuously true, which is why the motion is calm and looped. */
+  .live-dot {
+    position: relative;
+    display: inline-flex;
+    width: 6px;
+    height: 6px;
+    flex: none;
+  }
+  .live-dot::before,
+  .live-dot::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: 999px;
+  }
+  .live-dot::before {
+    background: currentColor;
+  }
+  .live-dot::after {
+    background: currentColor;
+    animation: ping-ring 2.2s cubic-bezier(0, 0, 0.2, 1) infinite;
+  }
+
+  /* Hover sheen: a single diagonal light pass across a panel. Applied via
+     group-hover; the panel must be `relative overflow-hidden` to clip it. */
+  .sheen::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    background-image: linear-gradient(105deg, transparent 40%, rgba(255,255,255,0.045) 48%, rgba(255,255,255,0.07) 50%, rgba(255,255,255,0.045) 52%, transparent 60%);
+    background-size: 220% 100%;
+    background-position: -180% 0;
+    opacity: 0;
+    transition: opacity 200ms ease;
+  }
+  .sheen:hover::after {
+    opacity: 1;
+    animation: shimmer 900ms ease-in-out;
+  }
+
+  /* Tactile press: controls physically yield a half-pixel under the cursor. */
+  .press {
+    transition: transform 120ms ease;
+  }
+  .press:active:not(:disabled) {
+    transform: translateY(0.5px) scale(0.99);
+  }
+
+  /* Price flash — a directional pulse on every live quote change. Background
+     only: the number stays readable and the color is data (up=green, down=red). */
+  .flash-up {
+    animation: flash-up 500ms ease-out;
+    border-radius: 3px;
+  }
+  .flash-down {
+    animation: flash-down 500ms ease-out;
+    border-radius: 3px;
+  }
+
+  /* Kill-switch button: the one deliberately loud control in the app. */
+  .kill-switch {
+    background: linear-gradient(180deg, rgba(255, 107, 94, 0.22), rgba(255, 107, 94, 0.1));
+    border: 1px solid rgba(255, 107, 94, 0.55);
+    box-shadow: 0 0 0 1px rgba(255, 107, 94, 0.12), 0 2px 12px rgba(255, 107, 94, 0.12);
+  }
+  .kill-switch:hover {
+    background: linear-gradient(180deg, rgba(255, 107, 94, 0.32), rgba(255, 107, 94, 0.16));
+  }
+}
+
+/* Film grain. Dark flat surfaces read as cheap; a trace of noise gives the ink
+   a tactile quality. Non-interactive and very low contrast. */
+body::after {
+  content: '';
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  pointer-events: none;
+  opacity: 0.028;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='220' height='220'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='220' height='220' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+
+/* Ambient light. One cool key from above, one faint violet bounce from below
+   (the India accent, echoed at room scale). Fixed so it reads as light falling
+   into the room rather than paint on any one panel. */
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  background:
+    radial-gradient(1100px 480px at 38% -6%, rgba(213, 209, 196, 0.05), transparent 62%),
+    radial-gradient(900px 520px at 88% 112%, rgba(142, 130, 168, 0.04), transparent 60%);
+}
+
+/* Display numerals — hero figures (index tiles, account equity). Larger optical
+   size, slightly negative tracking, tabular so live updates never reflow. */
+.num-display {
+  font-family: 'IBM Plex Mono', ui-monospace, monospace;
+  font-variant-numeric: tabular-nums;
+  font-feature-settings: 'tnum' 1, 'zero' 1;
+  letter-spacing: -0.02em;
+}
+
+.scroll-thin {
+  scrollbar-width: thin;
+  scrollbar-color: #33322c transparent;
+}
+.scroll-thin::-webkit-scrollbar {
+  width: 7px;
+  height: 7px;
+}
+.scroll-thin::-webkit-scrollbar-track {
+  background: transparent;
+}
+.scroll-thin::-webkit-scrollbar-thumb {
+  background-color: #33322c;
+  border-radius: 999px;
+}
+.scroll-thin::-webkit-scrollbar-thumb:hover {
+  background-color: #4a4841;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+  }
+  body::after {
+    display: none;
+  }}

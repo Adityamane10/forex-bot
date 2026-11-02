@@ -1,0 +1,8 @@
+# Optional: real FinBERT financial sentiment (free, open-source).
+# The core engine runs without these (falls back to the financial lexicon).
+# Install with:  pip install -r requirements-finbert.txt
+# CPU-only wheels keep the footprint smaller:
+#   pip install torch --index-url https://download.pytorch.org/whl/cpu
+#   pip install -r requirements-finbert.txt
+torch>=2.2
+transformers>=4.40

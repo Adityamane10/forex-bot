@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32">
+  <!-- Aperture mark, matching the in-app <Mark /> in src/App.tsx: an iris for an
+       instrument that watches a market. Ink ground, bone ring, live-green pupil. -->
+  <rect width="32" height="32" rx="7" fill="#0A0A09"/>
+  <circle cx="16" cy="16" r="10.5" fill="none" stroke="#D5D1C4" stroke-width="2" opacity="0.9"/>
+  <g stroke="#D5D1C4" stroke-width="2" opacity="0.55" stroke-linecap="butt">
+    <path d="M16 5.5V10"/>
+    <path d="M16 26.5V22"/>
+    <path d="M5.5 16H10"/>
+    <path d="M26.5 16H22"/>
+  </g>
+  <circle cx="16" cy="16" r="3.8" fill="#34D6A0"/>
+</svg>
